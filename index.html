@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hati Cinta</title>
+  <style>
+    /* Background animasi gradient bergerak */
+    @keyframes gradientMove {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', sans-serif;
+      position: relative;
+
+      /* Gradient background pink - merah muda - ungu */
+      background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc7c7, #ffdde1);
+      background-size: 400% 400%;
+      animation: gradientMove 15s ease infinite;
+    }
+
+    .heart-container {
+      cursor: pointer;
+      position: relative;
+      width: 150px;
+      height: 135px;
+      z-index: 2;
+    }
+
+    .heart {
+      width: 100%;
+      height: 100%;
+      background-color: red;
+      position: relative;
+      transform: rotate(-45deg);
+      transition: all 0.6s ease-in-out;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+      border-radius: 15px 15px 0 0;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 150px;
+      height: 135px;
+      background-color: red;
+      border-radius: 50%;
+      transition: all 0.6s ease-in-out;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+    }
+
+    .heart::before {
+      top: -75px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 75px;
+      top: 0;
+    }
+
+    .opened .heart {
+      transform: scale(0.8) rotate(0deg);
+      background-color: transparent;
+      box-shadow: none;
+    }
+
+    .opened .heart::before,
+    .opened .heart::after {
+      background-color: transparent;
+      box-shadow: none;
+    }
+
+    .message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease 0.6s;
+      z-index: 3;
+      text-shadow: 0 0 5px rgba(0,0,0,0.4);
+    }
+
+    .opened .message {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .message .name {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .message .quote {
+      font-size: 18px;
+      margin-top: 8px;
+    }
+
+    .particle {
+      position: absolute;
+      color: #ff4d6d;
+      font-size: 18px;
+      animation: floatUp 3s ease-out forwards;
+      pointer-events: none;
+      z-index: 1;
+      text-shadow: 0 0 3px #ff4d6d;
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--x), var(--y)) scale(1.5);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="heart-container" onclick="openHeart()" id="heartBox" title="Klik hati ini">
+    <div class="heart"></div>
+    <div class="message">
+      <div class="name" contenteditable="true" aria-label="Nama yang bisa diubah">Haloo avee</div>
+      <div class="quote" contenteditable="true" aria-label="Kata romantis yang bisa diubah">Kamu adalah alasanku tersenyum setiap hari.</div>
+    </div>
+  </div>
+
+  <script>
+    function openHeart() {
+      const heartBox = document.getElementById('heartBox');
+      heartBox.classList.toggle('opened');
+      if (heartBox.classList.contains('opened')) {
+        for (let i = 0; i < 60; i++) {
+          createParticle();
+        }
+      }
+    }
+
+    function createParticle() {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.innerHTML = '♥';
+
+      // Posisi awal tengah layar
+      particle.style.left = '50%';
+      particle.style.top = '50%';
+
+      // Arah acak (x dan y dalam bentuk CSS var untuk animasi)
+      const angle = Math.random() * 2 * Math.PI;
+      const radius = 100 + Math.random() * 100;
+      const x = Math.cos(angle) * radius + 'px';
+      const y = -Math.abs(Math.sin(angle) * radius * 2) + 'px';
+
+      particle.style.setProperty('--x', x);
+      particle.style.setProperty('--y', y);
+      particle.style.fontSize = (12 + Math.random() * 24) + 'px';
+
+      document.body.appendChild(particle);
+
+      setTimeout(() => {
+        particle.remove();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
